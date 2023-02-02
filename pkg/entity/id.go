@@ -12,5 +12,5 @@ func NewId() ID {
 
 func ParseID(s string) (ID, error) {
 	id, err := uuid.Parse(s)
-	return ID(id), nil
+	return ID(id), err
 }
