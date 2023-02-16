@@ -5,6 +5,8 @@ import (
 
 	"github.com/lanpaiva/api/configs"
 
+	"github.com/go-chi/chi/v5"
+	"github.com/go-chi/chi/v5/middleware"
 	"github.com/lanpaiva/api/internal/entity"
 	"github.com/lanpaiva/api/internal/infra/database"
 	"github.com/lanpaiva/api/internal/infra/webserver/handlers"
@@ -25,6 +27,9 @@ func main() {
 	productDB := database.NewProduct(db)
 	productHand := handlers.NewProductHandler(productDB)
 
-	http.HandleFunc("/products", productHand.CreateProduct)
-	http.ListenAndServe(":8000", nil)
+	r := chi.NewRouter()
+	r.Use(middleware.Logger)
+	r.Post("/products", productHand.CreateProduct)
+
+	http.ListenAndServe(":8000", r)
 }
