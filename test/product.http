@@ -8,11 +8,25 @@ Content-Type: application/json
 
 ###
 
-GET http://localhost:8000/products/296e323a-d412-41ae-b8cd-dea1e0df9e5c HTTP/1.1
+GET http://localhost:8000/products HTTP/1.1
 
 ####
 
-PUT http://localhost:8000/products/296e323a-d412-41ae-b8cd-dea1e0df9e5c HTTP/1.1
+GET http://localhost:8000/products/4b46eec0-7502-4a93-b413-9d0bc8486439 HTTP/1.1
+
+####
+
+PUT http://localhost:8000/products/4b46eec0-7502-4a93-b413-9d0bc8486439 HTTP/1.1
+Content-Type: application/json
+
+{
+  "name": "My Product Updated",
+  "price": 200
+}
+
+#####
+
+DELETE  http://localhost:8000/products/4b46eec0-7502-4a93-b413-9d0bc8486439 HTTP/1.1
 Content-Type: application/json
 
 {
