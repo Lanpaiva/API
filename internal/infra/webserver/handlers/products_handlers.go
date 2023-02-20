@@ -4,6 +4,7 @@ import (
 	"encoding/json"
 	"net/http"
 
+	"github.com/go-chi/chi/v5"
 	"github.com/lanpaiva/api/internal/dto"
 	"github.com/lanpaiva/api/internal/entity"
 	"github.com/lanpaiva/api/internal/infra/database"
@@ -41,4 +42,20 @@ func (h *ProductHandler) CreateProduct(w http.ResponseWriter, r *http.Request) {
 		w.WriteHeader(http.StatusInternalServerError)
 	}
 	w.WriteHeader(http.StatusCreated)
+}
+
+func (h *ProductHandler) GetProduct(w http.ResponseWriter, r *http.Request) {
+	id := chi.URLParam(r, "id")
+	if id == "" {
+		w.WriteHeader(http.StatusBadRequest)
+		return
+	}
+	product, err := h.ProductDB.FindById(id)
+	if err != nil {
+		w.WriteHeader(http.StatusNotFound)
+		return
+	}
+	w.Header().Set("Content-Type", "application/json")
+	w.WriteHeader(http.StatusOK)
+	json.NewEncoder(w).Encode(product)
 }
