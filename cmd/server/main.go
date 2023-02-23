@@ -1,6 +1,7 @@
 package main
 
 import (
+	"log"
 	"net/http"
 
 	"github.com/lanpaiva/api/configs"
@@ -29,11 +30,14 @@ func main() {
 	productHand := handlers.NewProductHandler(productDB)
 
 	userDB := database.NewUser(db)
-	userHand := handlers.NewUserHandler(userDB, configs.TokenAuth, configs.JwtExperesIn)
+	userHand := handlers.NewUserHandler(userDB)
 
 	r := chi.NewRouter()
 	r.Use(middleware.Logger)
-
+	// r.Use(LogRequest)
+	r.Use(middleware.Recoverer)
+	r.Use(middleware.WithValue("jwt", configs.TokenAuth))
+	r.Use(middleware.WithValue("JwtExperesIn", configs.JwtExperesIn))
 	r.Route("/products", func(r chi.Router) {
 		r.Use(jwtauth.Verifier(configs.TokenAuth))
 		r.Use(jwtauth.Authenticator)
@@ -48,4 +52,11 @@ func main() {
 	r.Post("/users/generate_token", userHand.GetJWT)
 
 	http.ListenAndServe(":8000", r)
+}
+
+func LogRequest(next http.Handler) http.Handler {
+	return http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
+		log.Printf("Request, %s %s", r.Method, r.URL.Path)
+		next.ServeHTTP(w, r)
+	})
 }
