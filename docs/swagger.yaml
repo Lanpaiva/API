@@ -1,0 +1,20 @@
+basePath: /
+host: localhost:8000
+info:
+  contact:
+    email: alanpaiva@mail.io
+    name: Alan Paiva
+  description: Product API with auhtentication
+  license:
+    name: Alan A. Paiva
+    url: https://github.com/Lanpaiva/API
+  termsOfService: http://swagger.io/terms/
+  title: Go API
+  version: "1.0"
+paths: {}
+securityDefinitions:
+  ApiKeyAuth:
+    in: header
+    name: Authorization
+    type: apiKey
+swagger: "2.0"
