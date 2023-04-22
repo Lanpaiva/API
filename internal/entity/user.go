@@ -1,6 +1,8 @@
 package entity
 
 import (
+	"unicode"
+
 	"github.com/lanpaiva/api/pkg/entity"
 	"golang.org/x/crypto/bcrypt"
 )
@@ -28,5 +30,27 @@ func NewUser(name, email, password string) (*User, error) {
 
 func (u *User) ValidatePassword(password string) bool {
 	err := bcrypt.CompareHashAndPassword([]byte(u.Password), []byte(password))
-	return err == nil
+	if err != nil {
+		return false
+	}
+
+	temMaiuscula := false
+	temMinuscula := false
+	temEspecial := false
+
+	for _, char := range password {
+		if unicode.IsUpper(char) {
+			temMaiuscula = true
+		} else if unicode.IsLower(char) {
+			temMinuscula = true
+		} else if unicode.IsPunct(char) {
+			temEspecial = true
+		}
+
+		if temMaiuscula && temMinuscula && temEspecial {
+			return true
+		}
+	}
+
+	return false
 }
